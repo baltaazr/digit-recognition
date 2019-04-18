@@ -1,0 +1,57 @@
+{% extends "layout.html" %} {% block content %}
+<div style="padding-top: 10px; width: 200px">
+  <div class="lds-roller" id="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <h1>Training</h1>
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Maximum Iterations"
+      aria-label="Maximum Iterations"
+      aria-describedby="basic-addon1"
+      id="max_iter"
+    />
+  </div>
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Learning Rate"
+      aria-label="Learning Rate"
+      aria-describedby="basic-addon2"
+      id="learning_rate"
+    />
+  </div>
+  <button type="button" class="btn btn-primary" onclick="train()">Train</button>
+  <script>
+    document.getElementById("spinner").style.visibility = "hidden";
+    train = () => {
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "/train_request", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          document.getElementById("spinner").style.visibility = "hidden";
+          window.location.href = "/";
+        }
+      };
+      xhr.send(
+        JSON.stringify({
+          max_iter: document.getElementById("max_iter").value,
+          learning_rate: document.getElementById("learning_rate").value
+        })
+      );
+      document.getElementById("spinner").style.visibility = "visible";
+    };
+  </script>
+</div>
+{% endblock %}
